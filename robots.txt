@@ -1,0 +1,38 @@
+# robots.txt for CaféVerse (https://cafeverse.github.io)
+
+# Default rule for all web crawlers
+User-agent: *
+Allow: /
+
+# Explicitly Allow Major Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Explicitly Allow AI & Generative Engine Crawlers (GEO / AIO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap Location
+Sitemap: https://cafeverse.github.io/sitemap.xml
+
