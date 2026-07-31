@@ -1,0 +1,17 @@
+{
+  "name": "CaféVerse Desktop",
+  "short_name": "CaféVerse",
+  "description": "A premium, ultra-responsive desktop media client for discovering movies and TV shows built with Electron, React, TypeScript, and Tailwind CSS.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1A140C",
+  "theme_color": "#6F4E37",
+  "icons": [
+    {
+      "src": "./assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

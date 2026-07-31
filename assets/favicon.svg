@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D2A1D"/>
+      <stop offset="50%" stop-color="#2C2416"/>
+      <stop offset="100%" stop-color="#1A140C"/>
+    </linearGradient>
+    <linearGradient id="cupGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A574"/>
+      <stop offset="50%" stop-color="#B8860B"/>
+      <stop offset="100%" stop-color="#6F4E37"/>
+    </linearGradient>
+    <linearGradient id="steamGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D4A574" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#F5EBE0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FAF6F0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded box -->
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bgGrad)" stroke="#523A28" stroke-width="8"/>
+  
+  <!-- Steam lines -->
+  <path d="M 185 180 Q 170 140 190 110 Q 210 80 195 50" fill="none" stroke="url(#steamGrad)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 256 170 Q 240 130 260 100 Q 280 70 265 40" fill="none" stroke="url(#steamGrad)" stroke-width="20" stroke-linecap="round"/>
+  <path d="M 327 180 Q 310 140 330 110 Q 350 80 335 50" fill="none" stroke="url(#steamGrad)" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Coffee Cup Main Body -->
+  <path d="M 128 200 L 384 200 C 384 200 376 360 256 360 C 136 360 128 200 128 200 Z" fill="url(#cupGrad)" stroke="#FAF6F0" stroke-opacity="0.2" stroke-width="6"/>
+
+  <!-- Cup Handle -->
+  <path d="M 370 230 C 430 230 430 310 365 310" fill="none" stroke="url(#cupGrad)" stroke-width="28" stroke-linecap="round"/>
+  <path d="M 370 230 C 430 230 430 310 365 310" fill="none" stroke="#FAF6F0" stroke-opacity="0.15" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Saucer -->
+  <path d="M 100 380 Q 256 420 412 380 C 430 380 430 405 400 415 C 310 445 202 445 112 415 C 82 405 82 380 100 380 Z" fill="#D4A574"/>
+</svg>

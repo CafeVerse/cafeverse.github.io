@@ -1,387 +1,984 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☕ CaféVerse - Premium Desktop Media Client</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>☕ CaféVerse - Premium Desktop Media &amp; Streaming Client</title>
 
-        :root {
-            --primary: #6F4E37;
-            --secondary: #8B7355;
-            --accent: #D4A574;
-            --dark: #2C2416;
-            --light: #F5EBE0;
-            --success: #52B788;
-        }
+    <!-- Primary SEO Meta Tags -->
+    <meta
+      name="description"
+      content="CaféVerse is a cozy, high-performance desktop media client for Windows &amp; Linux. Discover movies, TV series, build watchlists, and enjoy smooth playback."
+    />
+    <meta
+      name="keywords"
+      content="CaféVerse, desktop media client, movie app, TV show manager, Electron app, React media app, open source player, watchlists, Bun engine"
+    />
+    <meta name="author" content="CaféVerse" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="canonical" href="https://cafeverse.github.io/" />
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background: linear-gradient(135deg, var(--light) 0%, #fff 100%);
-            min-height: 100vh;
-        }
+    <!-- Favicon & PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="./assets/favicon.svg" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <meta name="theme-color" content="#6F4E37" />
 
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 2rem 0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:site_name" content="CaféVerse" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cafeverse.github.io/" />
+    <meta
+      property="og:title"
+      content="CaféVerse - Premium Desktop Media &amp; Streaming Client"
+    />
+    <meta
+      property="og:description"
+      content="Discover movies and TV series in a cozy, high-performance desktop environment built with Electron, React, and Bun."
+    />
+    <meta
+      property="og:image"
+      content="https://cafeverse.github.io/assets/app-preview.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="CaféVerse Desktop Client User Interface Preview"
+    />
+    <meta property="og:locale" content="en_US" />
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://cafeverse.github.io/" />
+    <meta
+      name="twitter:title"
+      content="CaféVerse - Premium Desktop Media &amp; Streaming Client"
+    />
+    <meta
+      name="twitter:description"
+      content="Discover movies and TV series in a cozy, high-performance desktop environment."
+    />
+    <meta
+      name="twitter:image"
+      content="https://cafeverse.github.io/assets/app-preview.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="CaféVerse Desktop Client User Interface Preview"
+    />
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .nav-links a:hover {
-            opacity: 0.8;
-        }
-
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: var(--secondary);
-            margin-bottom: 2rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-
-        .btn {
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(111, 78, 55, 0.3);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--light);
-            transform: translateY(-2px);
-        }
-
-        .features {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 2rem;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-        }
-
-        .tech-stack {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .tech-stack h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--dark);
-        }
-
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .tech-badge {
-            background: linear-gradient(135deg, var(--light) 0%, var(--accent) 100%);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            text-align: center;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .stats {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-top: 4px solid var(--primary);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--secondary);
-            font-size: 0.95rem;
-        }
-
-        footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        footer p {
-            margin-bottom: 0.5rem;
-        }
-
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "CaféVerse",
+            "operatingSystem": "Windows, Linux",
+            "applicationCategory": "EntertainmentApplication",
+            "softwareVersion": "1.0.0",
+            "description": "A premium, ultra-responsive desktop client for discovering movies and TV shows built with Electron, React, TypeScript, and Tailwind CSS.",
+            "image": "https://cafeverse.github.io/assets/app-preview.png",
+            "offers": {
+              "@type": "Offer",
+              "price": "0.00",
+              "priceCurrency": "USD"
+            },
+            "downloadUrl": "https://cafeverse.github.io/download.html",
+            "author": {
+              "@type": "Organization",
+              "name": "CaféVerse",
+              "url": "https://github.com/CafeVerse"
             }
+          },
+          {
+            "@type": "WebSite",
+            "name": "CaféVerse",
+            "url": "https://cafeverse.github.io/",
+            "description": "Discover movies and TV series in a cozy, high-performance desktop environment."
+          }
+        ]
+      }
+    </script>
 
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-            .nav-links {
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+            colors: {
+              cafe: {
+                50: "#FAF6F0",
+                100: "#F5EBE0",
+                200: "#E6D5C3",
+                300: "#D4A574",
+                400: "#B8860B",
+                500: "#8B7355",
+                600: "#6F4E37",
+                700: "#523A28",
+                800: "#3D2A1D",
+                900: "#2C2416",
+                950: "#1A140C",
+              },
+            },
+            boxShadow: {
+              glow: "0 0 30px -5px rgba(212, 165, 116, 0.3)",
+              "glow-lg": "0 0 60px -10px rgba(111, 78, 55, 0.5)",
+              "glow-amber": "0 0 40px -5px rgba(245, 158, 11, 0.25)",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-cafe-50 text-cafe-900 font-sans antialiased min-h-screen selection:bg-cafe-300 selection:text-cafe-950 flex flex-col justify-between"
+  >
+    <!-- Header / Navigation -->
+    <header
+      class="sticky top-0 z-50 backdrop-blur-md bg-cafe-950/90 border-b border-cafe-800/80 text-white shadow-xl"
+    >
+      <nav
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between"
+      >
+        <!-- Logo -->
+        <a
+          href="index.html"
+          class="flex items-center gap-3 text-2xl font-extrabold tracking-tight hover:opacity-90 transition-opacity"
+        >
+          <span
+            class="p-2 bg-gradient-to-br from-cafe-600 via-cafe-700 to-cafe-900 rounded-xl shadow-md border border-cafe-500/40 text-xl"
+            >☕</span
+          >
+          <span
+            class="bg-gradient-to-r from-white via-cafe-100 to-cafe-300 bg-clip-text text-transparent font-extrabold"
+            >CaféVerse</span
+          >
+        </a>
 
-            .cta-buttons {
-                flex-direction: column;
-            }
+        <!-- Desktop Navigation Links -->
+        <div
+          class="hidden md:flex items-center gap-8 text-sm font-semibold text-cafe-100"
+        >
+          <a href="#features" class="hover:text-cafe-300 transition-colors"
+            >Features</a
+          >
+          <a href="#install" class="hover:text-cafe-300 transition-colors"
+            >Quick Setup</a
+          >
+          <a href="#tech" class="hover:text-cafe-300 transition-colors"
+            >Tech Stack</a
+          >
+          <a href="download.html" class="hover:text-cafe-300 transition-colors"
+            >Downloads</a
+          >
+          <a
+            href="https://github.com/CafeVerse/CafeVerse"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 bg-cafe-800/80 hover:bg-cafe-700 text-white px-4 py-2 rounded-xl border border-cafe-600/50 transition-all hover:scale-105 hover:shadow-glow"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            <span>GitHub</span>
+          </a>
+        </div>
 
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <header>
-        <nav>
-            <div class="logo">☕ CaféVerse</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#tech">Tech Stack</a></li>
-                <li><a href="https://github.com/CafeVerse/CafeVerse" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
+        <!-- Mobile Controls -->
+        <div class="flex items-center gap-3 md:hidden">
+          <a
+            href="download.html"
+            class="bg-cafe-600 hover:bg-cafe-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md transition-colors"
+          >
+            Get App
+          </a>
+          <button
+            id="mobile-menu-btn"
+            aria-label="Toggle navigation menu"
+            class="p-2 text-cafe-200 hover:text-white rounded-lg bg-cafe-900 border border-cafe-700/60 focus:outline-none"
+          >
+            <svg
+              id="menu-open-icon"
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+            <svg
+              id="menu-close-icon"
+              class="w-6 h-6 hidden"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Mobile Drawer Navigation -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-cafe-950 border-b border-cafe-800 px-6 py-6 space-y-4 text-center transition-all duration-300"
+      >
+        <a
+          href="#showcase"
+          class="mobile-link block text-cafe-200 hover:text-white font-medium py-2"
+          >Preview</a
+        >
+        <a
+          href="#features"
+          class="mobile-link block text-cafe-200 hover:text-white font-medium py-2"
+          >Features</a
+        >
+        <a
+          href="#install"
+          class="mobile-link block text-cafe-200 hover:text-white font-medium py-2"
+          >Quick Setup</a
+        >
+        <a
+          href="#tech"
+          class="mobile-link block text-cafe-200 hover:text-white font-medium py-2"
+          >Tech Stack</a
+        >
+        <a
+          href="download.html"
+          class="mobile-link block text-amber-400 font-bold py-2"
+          >Downloads Page</a
+        >
+        <div class="pt-2 border-t border-cafe-800 flex justify-center">
+          <a
+            href="https://github.com/CafeVerse/CafeVerse"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 bg-cafe-800 hover:bg-cafe-700 text-white px-5 py-2.5 rounded-xl border border-cafe-700 font-semibold text-sm"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            <span>GitHub Repository</span>
+          </a>
+        </div>
+      </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>☕ CaféVerse</h1>
-        <p class="hero-subtitle">A premium, ultra-responsive desktop client for discovering movies and TV shows</p>
-        <p style="font-size: 1.1rem; color: var(--secondary); margin-bottom: 2rem;">
-            Built with Electron, React, TypeScript, Tailwind CSS 4.0, and powered by Bun
-        </p>
-        <div class="cta-buttons">
-            <a href="https://github.com/CafeVerse/CafeVerse/releases" class="btn btn-primary">Download Now</a>
-            <a href="https://github.com/CafeVerse/CafeVerse" class="btn btn-secondary">View on GitHub</a>
-        </div>
-    </section>
+    <main>
+      <!-- Hero Section -->
+      <section
+        class="relative overflow-hidden bg-gradient-to-b from-cafe-950 via-cafe-900 to-cafe-950 text-white pt-20 pb-28"
+      >
+        <!-- Ambient Glowing Orbs -->
+        <div
+          class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-cafe-600/25 blur-[140px] rounded-full pointer-events-none"
+        ></div>
+        <div
+          class="absolute bottom-10 right-10 w-96 h-96 bg-amber-600/15 blur-[120px] rounded-full pointer-events-none"
+        ></div>
 
-    <!-- Statistics -->
-    <section class="stats">
-        <div class="stat-card">
-            <div class="stat-number">🎬</div>
-            <div class="stat-label">Cinematic Experience</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">⚡</div>
-            <div class="stat-label">Ultra-Fast Performance</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">💻</div>
-            <div class="stat-label">Cross-Platform</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">📺</div>
-            <div class="stat-label">Massive Catalog</div>
-        </div>
-    </section>
+        <div
+          class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
+        >
+          <!-- Version Badge -->
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cafe-900/90 border border-cafe-600/40 text-cafe-300 text-xs font-semibold mb-6 shadow-sm"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+            ></span>
+            <span>v1.0.0 Stable Release</span>
+            <span class="text-cafe-500">•</span>
+            <span class="text-amber-300">Open Source Desktop App</span>
+          </div>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2>✨ Features</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎬</div>
-                <h3>Cinematic Full-Bleed Pages</h3>
-                <p>Beautiful media presentation with smooth gradient banners, live IMDB scores, casting details, and similar recommendation carousels.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Embedded Media Player</h3>
-                <p>Fully customizable integrated video player with custom styling, subtitle support (.srt & .vtt), and smart state restoration.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📺</div>
-                <h3>Comprehensive Catalog</h3>
-                <p>Seamlessly browse, search, and filter massive movie and television databases powered by high-performance APIs.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⭐</div>
-                <h3>Local Watchlist</h3>
-                <p>A persisted, interactive watchlist built directly into the client with localStorage sync for your viewing preferences.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📂</div>
-                <h3>Auto-Generated Routing</h3>
-                <p>Next.js-style routing with custom file-system routing scanner that converts folder schemas into React Router params.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💻</div>
-                <h3>Cross-Platform Builds</h3>
-                <p>Native application packaging for Windows and Linux with optimized performance and seamless installation.</p>
-            </div>
-        </div>
-    </section>
+          <!-- Main Heading -->
+          <h1
+            class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight"
+          >
+            Discover Movies & Series in a <br class="hidden sm:inline" />
+            <span
+              class="bg-gradient-to-r from-cafe-300 via-amber-200 to-cafe-100 bg-clip-text text-transparent"
+              >Cozy, Premium Space</span
+            >
+          </h1>
 
-    <!-- Tech Stack -->
-    <section class="tech-stack" id="tech">
-        <h2>🛠️ Technology Stack</h2>
-        <div class="tech-grid">
-            <div class="tech-badge">Electron</div>
-            <div class="tech-badge">React 19</div>
-            <div class="tech-badge">TypeScript</div>
-            <div class="tech-badge">Vite 7</div>
-            <div class="tech-badge">Tailwind CSS 4.0</div>
-            <div class="tech-badge">React Router 7</div>
-            <div class="tech-badge">Bun</div>
-            <div class="tech-badge">Electron Builder</div>
-            <div class="tech-badge">Lucide Icons</div>
+          <p
+            class="text-sm sm:text-base text-cafe-200/90 max-w-2xl mx-auto mb-8 font-normal leading-relaxed"
+          >
+            A high-performance desktop streaming client engineered for cinema
+            enthusiasts. Enjoy smooth playback, localized watchlists, and smart
+            catalog discovery.
+          </p>
+
+          <!-- Tech Stack Pill Ribbon -->
+          <div
+            class="flex flex-wrap items-center justify-center gap-2 text-xs text-cafe-300/80 mb-10 font-mono"
+          >
+            <span
+              class="px-2.5 py-1 rounded-md bg-cafe-900/80 border border-cafe-800"
+              >Electron 34</span
+            >
+            <span
+              class="px-2.5 py-1 rounded-md bg-cafe-900/80 border border-cafe-800"
+              >React 19</span
+            >
+            <span
+              class="px-2.5 py-1 rounded-md bg-cafe-900/80 border border-cafe-800"
+              >TypeScript</span
+            >
+            <span
+              class="px-2.5 py-1 rounded-md bg-cafe-900/80 border border-cafe-800"
+              >Tailwind 4.0</span
+            >
+            <span
+              class="px-2.5 py-1 rounded-md bg-cafe-900/80 border border-cafe-800"
+              >Bun Engine</span
+            >
+          </div>
+
+          <!-- Action CTA Buttons -->
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          >
+            <a
+              href="download.html"
+              class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cafe-600 via-cafe-500 to-cafe-600 hover:from-cafe-500 hover:to-cafe-400 text-white font-bold rounded-xl shadow-glow hover:shadow-glow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 text-base"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              <span>Download CaféVerse</span>
+            </a>
+
+            <a
+              href="#install"
+              class="w-full sm:w-auto px-8 py-4 bg-cafe-900/90 hover:bg-cafe-800 text-cafe-100 font-semibold rounded-xl border border-cafe-700/70 hover:border-cafe-500 transition-all flex items-center justify-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 text-amber-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span>Quick Install Cmd</span>
+            </a>
+          </div>
         </div>
-    </section>
+      </section>
+
+      <!-- Statistics Bar -->
+      <section
+        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20"
+      >
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div
+            class="bg-white rounded-2xl p-6 shadow-xl border border-cafe-200/80 text-center transform hover:-translate-y-1 transition-all"
+          >
+            <div class="text-3xl sm:text-4xl mb-2">🎬</div>
+            <div class="font-bold text-cafe-900 text-lg">Modern UI</div>
+            <div class="text-xs text-cafe-600 font-medium mt-1">
+              Immersive Theme
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-6 shadow-xl border border-cafe-200/80 text-center transform hover:-translate-y-1 transition-all"
+          >
+            <div class="text-3xl sm:text-4xl mb-2">⚡</div>
+            <div class="font-bold text-cafe-900 text-lg">Ultra-Fast</div>
+            <div class="text-xs text-cafe-600 font-medium mt-1">
+              Bun & Vite Engine
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-6 shadow-xl border border-cafe-200/80 text-center transform hover:-translate-y-1 transition-all"
+          >
+            <div class="text-3xl sm:text-4xl mb-2">💻</div>
+            <div class="font-bold text-cafe-900 text-lg">Cross-Platform</div>
+            <div class="text-xs text-cafe-600 font-medium mt-1">
+              Windows & Linux
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-2xl p-6 shadow-xl border border-cafe-200/80 text-center transform hover:-translate-y-1 transition-all"
+          >
+            <div class="text-3xl sm:text-4xl mb-2">📺</div>
+            <div class="font-bold text-cafe-900 text-lg">Massive Catalog</div>
+            <div class="text-xs text-cafe-600 font-medium mt-1">
+              Movies & TV Series
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Installation Section -->
+      <section
+        id="install"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20"
+      >
+        <div
+          class="bg-white rounded-3xl p-8 sm:p-12 border border-cafe-200/80 shadow-2xl"
+        >
+          <div class="max-w-3xl mx-auto text-center mb-8">
+            <span
+              class="inline-block text-xs font-bold tracking-widest text-cafe-600 uppercase mb-2 px-3 py-1 bg-cafe-100 rounded-full"
+            >
+              Instant Setup
+            </span>
+            <h2
+              class="text-3xl sm:text-4xl font-extrabold text-cafe-900 tracking-tight"
+            >
+              Install via Command Line
+            </h2>
+            <p class="text-cafe-700 mt-3 text-sm sm:text-base">
+              Run the automated installation script in your terminal to fetch
+              and setup the latest CaféVerse build automatically.
+            </p>
+          </div>
+
+          <div class="max-w-3xl mx-auto">
+            <!-- Platform Selector Tabs -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <button
+                id="tab-win"
+                onclick="switchInstallTab('win')"
+                class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-700 text-white shadow-md flex items-center gap-2"
+              >
+                <span>🪟</span> Windows (PowerShell)
+              </button>
+              <button
+                id="tab-linux"
+                onclick="switchInstallTab('linux')"
+                class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-100 text-cafe-700 hover:bg-cafe-200 flex items-center gap-2"
+              >
+                <span>🐧</span> Linux / macOS (Bash)
+              </button>
+            </div>
+
+            <!-- Terminal Code Window Box -->
+            <div class="relative group">
+              <div
+                class="bg-cafe-950 text-cafe-100 rounded-xl p-4 font-mono text-sm sm:text-base shadow-inner border border-cafe-800 overflow-hidden"
+              >
+                <!-- Terminal Header Bar -->
+                <div
+                  class="flex items-center justify-between pb-4 mb-4 border-b border-cafe-800 text-xs text-cafe-400"
+                >
+                  <span
+                    id="install-terminal-title"
+                    class="font-semibold text-cafe-300"
+                    >PowerShell Administrator</span
+                  >
+                </div>
+
+                <div
+                  class="flex items-center justify-between gap-4 overflow-x-auto"
+                >
+                  <div class="flex items-center gap-3 flex-1">
+                    <span class="text-amber-400 select-none font-bold">$</span>
+                    <code
+                      id="install-cmd-text"
+                      class="text-cafe-100 selection:bg-cafe-600 font-mono text-xs sm:text-sm"
+                      >iwr -useb
+                      https://raw.githubusercontent.com/cafeverse/cafeverse/main/install.ps1
+                      | iex</code
+                    >
+                  </div>
+                  <button
+                    id="copy-install-btn"
+                    onclick="copyInstallCmd()"
+                    class="px-4 py-2 bg-cafe-800 hover:bg-cafe-700 text-cafe-100 hover:text-white text-xs font-semibold rounded-lg border border-cafe-700 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+                  >
+                    <svg
+                      id="copy-icon"
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span id="copy-btn-text">Copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-xs text-center text-cafe-500 mt-4">
+              Prefer standalone installers? Visit our
+              <a
+                href="download.html"
+                class="text-cafe-700 font-semibold underline hover:text-cafe-900"
+                >Downloads Page</a
+              >
+              for direct .exe and .AppImage builds.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Key Features Section -->
+      <section
+        id="features"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20"
+      >
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="text-xs font-bold tracking-widest text-cafe-600 uppercase mb-2 px-3 py-1 bg-cafe-100 rounded-full inline-block"
+          >
+            Core Capabilities
+          </span>
+          <h2
+            class="text-3xl sm:text-4xl font-extrabold text-cafe-900 tracking-tight mt-2"
+          >
+            Designed for Perfection
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              ⚡
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Media Engine</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Embedded Video Player
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              Fully customizable video playback engine with subtitle support
+              (.srt & .vtt), volume gain control, and smart watch position
+              memory.
+            </p>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              📺
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Catalog</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Rich Catalog Discovery
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              Seamlessly search and filter massive movie and television
+              databases powered by high-performance APIs and cached queries.
+            </p>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              ⭐
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Personalization</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Local Watchlist Sync
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              Keep track of titles you want to watch or have finished. Persisted
+              directly on your machine without requiring an account.
+            </p>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              💻
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Native</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Cross-Platform Builds
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              Native application builds for Windows and Linux with low resource
+              overhead, hardware acceleration, and zero dependencies.
+            </p>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              🎨
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Aesthetics</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Cozy Dark Theme
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              Crafted with warm espresso and amber tones designed to prevent eye
+              strain during late-night movie sessions.
+            </p>
+          </div>
+
+          <div
+            class="bg-white rounded-2xl p-8 border border-cafe-200/80 shadow-sm hover:shadow-xl hover:border-cafe-300 transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl bg-cafe-100 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-inner"
+            >
+              🛡️
+            </div>
+            <span
+              class="text-[10px] font-bold font-mono tracking-wider uppercase text-cafe-500 bg-cafe-100 px-2 py-0.5 rounded"
+              >Open Source</span
+            >
+            <h3
+              class="text-xl font-bold text-cafe-900 mt-2 mb-3 group-hover:text-cafe-600 transition-colors"
+            >
+              Transparent & Free
+            </h3>
+            <p class="text-cafe-700 leading-relaxed text-sm">
+              100% open source under Apache License 2.0. No ad trackers,
+              bloatware, or forced premium subscriptions.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technology Stack Section -->
+      <section id="tech" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div
+          class="bg-gradient-to-br from-cafe-950 via-cafe-900 to-cafe-950 rounded-3xl p-8 sm:p-12 text-white border border-cafe-800 shadow-2xl relative overflow-hidden"
+        >
+          <div
+            class="absolute -bottom-20 -right-20 w-96 h-96 bg-cafe-600/20 blur-[120px] rounded-full pointer-events-none"
+          ></div>
+
+          <div class="text-center max-w-2xl mx-auto mb-12 relative z-10">
+            <span
+              class="text-xs font-bold tracking-widest text-cafe-300 uppercase mb-2 px-3 py-1 bg-cafe-900 border border-cafe-700 rounded-full inline-block"
+            >
+              Modern Architecture
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
+              Technology Stack
+            </h2>
+          </div>
+
+          <div
+            class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 relative z-10"
+          >
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">⚡</span> Electron 34
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">⚛️</span> React 19
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">🔷</span> TypeScript
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">⚡</span> Vite 7
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">🎨</span> Tailwind 4.0
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">🚦</span> React Router 7
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">🌰</span> Bun Engine
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">📦</span> Electron Builder
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">✨</span> Lucide Icons
+            </div>
+            <div
+              class="bg-cafe-900/80 border border-cafe-800 hover:border-cafe-500 p-4 rounded-2xl text-center font-medium text-cafe-100 hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-glow"
+            >
+              <span class="block text-2xl mb-1">🍿</span> TMDB & IMDb API
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <!-- Footer -->
-    <footer>
-        <p><strong>☕ CaféVerse</strong> - Premium Desktop Media Client</p>
-        <p>Apache License 2.0 • <a href="https://github.com/CafeVerse" target="_blank">CafeVerse Organization</a></p>
-        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">Made with ☕ by the CaféVerse Team</p>
+    <footer class="bg-cafe-950 text-cafe-300 py-12 border-t border-cafe-900">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="text-3xl p-2 bg-cafe-900 rounded-xl border border-cafe-800"
+            >☕</span
+          >
+          <div>
+            <span class="font-extrabold text-white text-lg tracking-tight"
+              >CaféVerse</span
+            >
+            <p class="text-xs text-cafe-400">Premium Desktop Media Client</p>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-cafe-300"
+        >
+          <a href="#showcase" class="hover:text-white transition">Preview</a>
+          <a href="#features" class="hover:text-white transition">Features</a>
+          <a href="#install" class="hover:text-white transition">Quick Setup</a>
+          <a
+            href="download.html"
+            class="hover:text-white transition text-amber-400"
+            >Downloads</a
+          >
+          <a
+            href="https://github.com/CafeVerse/CafeVerse"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-white transition"
+            >GitHub</a
+          >
+        </div>
+
+        <div class="text-xs text-cafe-400 text-center md:text-right">
+          <p>
+            Apache License 2.0 •
+            <a
+              href="https://github.com/CafeVerse"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-cafe-300 hover:underline"
+              >CaféVerse Organization</a
+            >
+          </p>
+          <p class="mt-1 text-cafe-500">Made with ☕ by the CaféVerse Team</p>
+        </div>
+      </div>
     </footer>
-</body>
+
+    <!-- Client Interactive Scripts -->
+    <script>
+      // 1. Mobile Menu Drawer Toggle
+      const mobileBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const openIcon = document.getElementById("menu-open-icon");
+      const closeIcon = document.getElementById("menu-close-icon");
+
+      if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener("click", () => {
+          const isHidden = mobileMenu.classList.contains("hidden");
+          if (isHidden) {
+            mobileMenu.classList.remove("hidden");
+            openIcon.classList.add("hidden");
+            closeIcon.classList.remove("hidden");
+          } else {
+            mobileMenu.classList.add("hidden");
+            openIcon.classList.remove("hidden");
+            closeIcon.classList.add("hidden");
+          }
+        });
+
+        // Close menu on link click
+        document.querySelectorAll(".mobile-link").forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.add("hidden");
+            openIcon.classList.remove("hidden");
+            closeIcon.classList.add("hidden");
+          });
+        });
+      }
+
+      // 2. Quick Setup Installation Tab Switcher
+      const installCmds = {
+        win: "iwr -useb https://raw.githubusercontent.com/cafeverse/cafeverse/main/install.ps1 | iex",
+        linux:
+          "curl -fsSL https://raw.githubusercontent.com/cafeverse/cafeverse/main/install.sh | bash",
+      };
+
+      let activeInstallPlatform = "win";
+
+      function switchInstallTab(platform) {
+        activeInstallPlatform = platform;
+        const tabWin = document.getElementById("tab-win");
+        const tabLinux = document.getElementById("tab-linux");
+        const titleEl = document.getElementById("install-terminal-title");
+        const cmdEl = document.getElementById("install-cmd-text");
+
+        if (platform === "win") {
+          tabWin.className =
+            "px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-700 text-white shadow-md flex items-center gap-2";
+          tabLinux.className =
+            "px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-100 text-cafe-700 hover:bg-cafe-200 flex items-center gap-2";
+          titleEl.innerText = "PowerShell Administrator";
+          cmdEl.innerText = installCmds.win;
+        } else {
+          tabLinux.className =
+            "px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-700 text-white shadow-md flex items-center gap-2";
+          tabWin.className =
+            "px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-cafe-100 text-cafe-700 hover:bg-cafe-200 flex items-center gap-2";
+          titleEl.innerText = "bash - terminal";
+          cmdEl.innerText = installCmds.linux;
+        }
+      }
+
+      // 3. Copy Command to Clipboard
+      function copyInstallCmd() {
+        const cmdText = installCmds[activeInstallPlatform];
+        const btnText = document.getElementById("copy-btn-text");
+        const btn = document.getElementById("copy-install-btn");
+
+        navigator.clipboard
+          .writeText(cmdText)
+          .then(() => {
+            btnText.innerText = "Copied!";
+            btn.classList.add(
+              "bg-emerald-700",
+              "text-white",
+              "border-emerald-600",
+            );
+            setTimeout(() => {
+              btnText.innerText = "Copy";
+              btn.classList.remove(
+                "bg-emerald-700",
+                "text-white",
+                "border-emerald-600",
+              );
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Clipboard copy failed:", err);
+          });
+      }
+
+      // 4. Interactive Feature Showcase Tab Switcher
+      function switchShowcaseTab(index) {
+        const tabBtns = document.querySelectorAll(".showcase-tab-btn");
+        const panels = document.querySelectorAll(".showcase-panel");
+
+        tabBtns.forEach((btn, idx) => {
+          if (idx === index) {
+            btn.className =
+              "showcase-tab-btn active px-5 py-2.5 rounded-xl font-bold text-sm border transition-all bg-cafe-800 text-white border-cafe-700 shadow-md";
+          } else {
+            btn.className =
+              "showcase-tab-btn px-5 py-2.5 rounded-xl font-bold text-sm border transition-all bg-white text-cafe-800 border-cafe-200 hover:bg-cafe-100";
+          }
+        });
+
+        panels.forEach((panel, idx) => {
+          if (idx === index) {
+            panel.classList.remove("hidden");
+          } else {
+            panel.classList.add("hidden");
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
